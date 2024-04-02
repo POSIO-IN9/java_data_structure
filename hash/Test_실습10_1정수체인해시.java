@@ -37,7 +37,7 @@ class SimpleChainHash {
 		int hash = hashValue(key);
 		Node p = table[hash];
 		while (p!= null) {
-			if (p.getKey() ==key)
+			if (p.getKey() == key)
 				return 1;
 			p = p.next;
 		}
