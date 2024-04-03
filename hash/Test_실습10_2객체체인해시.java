@@ -6,6 +6,8 @@ import java.util.Comparator;
 //체인법에 의한 해시
 import java.util.Scanner;
 
+
+
 //체인법에 의한 해시
 
 class SimpleObject5 {
@@ -13,6 +15,15 @@ class SimpleObject5 {
 
 	static final int NO = 1;
 	static final int NAME = 2;
+
+	public static final Comparator<? super SimpleObject5> 
+	NO_ORDER =  new NoOrderComparator();
+
+	private static class NoOrderComparator implements Comparator<SimpleObject5> {
+		public int compare(SimpleObject5 d1, SimpleObject5 d2) {
+			return (d1.no.compareTo(d2.no) > 0) ? 1 : (d1.no.compareTo(d2.no)<0) ? -1 : 0;
+		}
+	} ;
 	Integer no; // 회원번호
 	String name; // 이름
 	
@@ -73,29 +84,64 @@ class ChainHash5 {
 
 //--- 키값이 key인 요소를 검색(데이터를 반환) ---//
 	public int search(SimpleObject5 st, Comparator<? super SimpleObject5> c) {
-		int hash = hashValue(c);
+		int hash = hashValue(st.no);
 		Node2 p = table[hash];
 		while (p != null) {
-			if (p.getData().equals(c))
+			if (c.compare(p.getData(),st) == 0)
 				return 1;
+			p = p.next;
+		}
+		return 0;
+		
+	}
+
+//--- 키값이 key인 데이터를 data의 요소로 추가 ---//
+	public int add(SimpleObject5 st, Comparator<? super SimpleObject5> c) {
+		int hash = hashValue(st.no);
+		System.out.println(hash);
+		Node2 p = table[hash];
+		
+		while (p != null) {
+			if(c.compare(p.getData(),st) == 0)
+				return 1;
+				p = p.next;
+		}
+		Node2 temp = new Node2(st, table[hash]);
+		table[hash] = temp;
+		return 0;	
+	}
+
+//--- 키값이 key인 요소를 삭제 ---//
+	public int delete(SimpleObject5 st, Comparator<? super SimpleObject5> c) {
+		int hash = hashValue(st.no);
+		Node2 p = table[hash];
+		Node2 pp = null;
+		
+		while (p != null) {
+			if(c.compare(p.getData(),st) == 0) {
+				if(pp == null)
+					table[hash] = p.next;
+				else
+				pp.next = p.next;
+				return 1;
+			}
+			pp = p;
 			p = p.next;
 		}
 		return 0;
 	}
 
-//--- 키값이 key인 데이터를 data의 요소로 추가 ---//
-	public int add(SimpleObject5 st, Comparator<? super SimpleObject5> c) {
-		
-	}
-
-//--- 키값이 key인 요소를 삭제 ---//
-	public int delete(SimpleObject5 st, Comparator<? super SimpleObject5> c) {
-		
-	}
-
 //--- 해시 테이블을 덤프(dump) ---//
 	public void dump() {
-		
+		for(int i = 0; i < size; i++) {
+			Node2 p = table[i];
+			System.out.printf("%02d", i);
+			while(p != null) {
+				System.out.printf(" -> %s ", p.getData());
+				p = p.next;
+			}
+			System.out.println();
+		}
 	}
 }
 

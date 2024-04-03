@@ -118,7 +118,7 @@ class LinkedList1 {
 
 		Node1 p1 = this.first , q1 = b.first , p2 = null, q2 = null;
 		{
-		while(p1 !=null && q1!=null)
+		while(p1 !=null && q1!=null) {
 			while(p1 != null) {
 				p1 = p1.link;
 				p1 = p2;
@@ -126,7 +126,6 @@ class LinkedList1 {
 				p1 = p1.link;
 				else
 				p1.link = q2;
-				break;
 			}
 			
 			while(q1 != null) {
@@ -136,9 +135,8 @@ class LinkedList1 {
 				q1 = q1.link;
 				else
 				q1.link = p2;
-				break;
 			}
-
+		}
 			return;
 
 		}
